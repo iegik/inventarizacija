@@ -5,7 +5,7 @@ import {
     UIManager,
     View
 } from 'react-native';
-import Demo from './containers/Demo';
+import Main from './containers/Main';
 
 // https://facebook.github.io/react-native/docs/animations.html#layoutanimation
 UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -15,7 +15,7 @@ export default class App extends Component {
         return (
             <View style={styles.container}>
                 <StatusBar backgroundColor='transparent' animated={true} translucent={true} barStyle="light-content"/>
-                <Demo />
+                <Main />
             </View>
         );
     }

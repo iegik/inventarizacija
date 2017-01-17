@@ -4,8 +4,10 @@ import {
     Dimensions,
     Text,
     View,
+    Switch,
     TouchableHighlight,
     TextInput,
+    InteractionManager,
 } from 'react-native';
 import Camera from 'react-native-camera';
 
@@ -15,18 +17,40 @@ export default class Main extends Component {
         amount: '1',
         measurement: 'gab',
         price: '0.00',
+        showCamera: false,
+        renderPlaceholderOnly: true,
+        loadingCamera: true,
     };
 
+    componentDidMount() {
+        InteractionManager.runAfterInteractions(() => {
+            this.setState({
+                renderPlaceholderOnly: false,
+                loadingCamera: false
+            });
+        });
+    }
+
     render() {
+        if (this.state.renderPlaceholderOnly) {
+            return this._renderPlaceholderView();
+        }
         return (
             <View style={styles.container}>
                 <View style={styles.previewWrap}>
-                    <Camera
+                    {this.state.showCamera ? (<Camera
                         style={styles.preview}
                         aspect={Camera.constants.Aspect.fill}
+                        flashMode={Camera.constants.FlashMode.on}
+                        torchMode={Camera.constants.TorchMode.auto}
                         onBarCodeRead={this.readBarCode.bind(this)}
+                        barCodeTypes={['ean13']}
                         barcodeScannerEnabled={true}
-                    />
+                        />) : (<Text style={styles.text_center}>Camera is off</Text>) }
+                </View>
+                <View style={styles.switch}>
+                    <Switch onValueChange={this._onPressButton.bind(this)}
+                        value={this.state.showCamera} />
                 </View>
                 <View style={styles.form}>
                     <View style={[styles.fieldset,styles.code]}>
@@ -75,6 +99,22 @@ export default class Main extends Component {
     setMeasurement(measurement) {
         this.setState({measurement})
     }
+
+    _onPressButton(value){
+        InteractionManager.runAfterInteractions(() => {
+            this.setState({
+                showCamera: value,
+            });
+        });
+    }
+
+    _renderPlaceholderView() {
+        return (
+            <View>
+                <Text>Loading...</Text>
+            </View>
+        );
+    }
 }
 
 const {width, height} = Dimensions.get('window');
@@ -105,7 +145,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         alignItems: 'center',
         width,
-        height: 30
+        height: 25
         //height: Dimensions.get('window').height,
     },
     preview: {
@@ -160,4 +200,12 @@ const styles = StyleSheet.create({
         padding: 0.25 * $rem,
         width: width - 0.5 * $rem,
     },
+    switch: {
+        alignItems: 'center',
+    },
+    loading: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
 });

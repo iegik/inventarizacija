@@ -4,8 +4,10 @@ import {
     Dimensions,
     Text,
     View,
+    Switch,
     TouchableHighlight,
     TextInput,
+    InteractionManager,
 } from 'react-native';
 import Camera from 'react-native-camera';
 
@@ -15,19 +17,49 @@ export default class Main extends Component {
         amount: '1',
         measurement: 'gab',
         price: '0.00',
+        showCamera: false,
+        renderPlaceholderOnly: true,
+        loadingCamera: true,
     };
 
+    componentDidMount() {
+        InteractionManager.runAfterInteractions(() => {
+            this.setState({
+                renderPlaceholderOnly: false,
+                loadingCamera: false
+            });
+        });
+    }
+
+    renderScan = (
+        <TouchableHighlight style={[styles.btn, {width}]}
+                            onPress={this._onPressButton.bind(this)}>
+            <Text style={[styles.text, styles.btnText,styles.text_center]}>Scan</Text>
+        </TouchableHighlight>
+    );
+
     render() {
+        if (this.state.renderPlaceholderOnly) {
+            return this._renderPlaceholderView;
+        }
         return (
             <View style={styles.container}>
                 <View style={styles.previewWrap}>
-                    <Camera
+                    {this.state.showCamera ? (<Camera
                         style={styles.preview}
                         aspect={Camera.constants.Aspect.fill}
+                        flashMode={Camera.constants.FlashMode.on}
+                        torchMode={Camera.constants.TorchMode.auto}
                         onBarCodeRead={this.readBarCode.bind(this)}
+                        barCodeTypes={['ean13']}
                         barcodeScannerEnabled={true}
-                    />
+                        />) : (this.renderScan) }
                 </View>
+                {/*<View style={styles.switch}>*/}
+                    {/*<Switch onValueChange={this._onPressButton.bind(this)}*/}
+                        {/*value={this.state.showCamera} />*/}
+                {/*</View>*/}
+
                 <View style={styles.form}>
                     <View style={[styles.fieldset,styles.code]}>
                         <TextInput
@@ -69,12 +101,29 @@ export default class Main extends Component {
         if(this.state.code === code){
             return;
         }
-        this.setState({code});
+        this.setState({
+            code,
+            showCamera: false,
+        });
     }
 
     setMeasurement(measurement) {
         this.setState({measurement})
     }
+
+    _onPressButton(value){
+        InteractionManager.runAfterInteractions(() => {
+            this.setState({
+                showCamera: value,
+            });
+        });
+    }
+
+    _renderPlaceholderView = (
+        <View>
+            <Text>Loading...</Text>
+        </View>
+    );
 }
 
 const {width, height} = Dimensions.get('window');
@@ -87,10 +136,7 @@ const $yellow = '#eeee11';
 
 const $vh = 100 / height;
 const $rem = 120 * $vh;
-const $XXL = 1.75 * $rem;
-const $XL = 1.5 * $rem;
-const $L = 1.25 * $rem;
-const $M = 1 * $rem;
+const $M = $rem;
 const $serif = 'monospace';
 
 const styles = StyleSheet.create({
@@ -105,7 +151,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         alignItems: 'center',
         width,
-        height: 30
+        height: 25
         //height: Dimensions.get('window').height,
     },
     preview: {
@@ -160,4 +206,12 @@ const styles = StyleSheet.create({
         padding: 0.25 * $rem,
         width: width - 0.5 * $rem,
     },
+    switch: {
+        alignItems: 'center',
+    },
+    loading: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
 });

@@ -31,9 +31,16 @@ export default class Main extends Component {
         });
     }
 
+    renderScan = (
+        <TouchableHighlight style={[styles.btn, {width}]}
+                            onPress={this._onPressButton.bind(this)}>
+            <Text style={[styles.text, styles.btnText,styles.text_center]}>Scan</Text>
+        </TouchableHighlight>
+    );
+
     render() {
         if (this.state.renderPlaceholderOnly) {
-            return this._renderPlaceholderView();
+            return this._renderPlaceholderView;
         }
         return (
             <View style={styles.container}>
@@ -46,12 +53,13 @@ export default class Main extends Component {
                         onBarCodeRead={this.readBarCode.bind(this)}
                         barCodeTypes={['ean13']}
                         barcodeScannerEnabled={true}
-                        />) : (<Text style={styles.text_center}>Camera is off</Text>) }
+                        />) : (this.renderScan) }
                 </View>
-                <View style={styles.switch}>
-                    <Switch onValueChange={this._onPressButton.bind(this)}
-                        value={this.state.showCamera} />
-                </View>
+                {/*<View style={styles.switch}>*/}
+                    {/*<Switch onValueChange={this._onPressButton.bind(this)}*/}
+                        {/*value={this.state.showCamera} />*/}
+                {/*</View>*/}
+
                 <View style={styles.form}>
                     <View style={[styles.fieldset,styles.code]}>
                         <TextInput
@@ -93,7 +101,10 @@ export default class Main extends Component {
         if(this.state.code === code){
             return;
         }
-        this.setState({code});
+        this.setState({
+            code,
+            showCamera: false,
+        });
     }
 
     setMeasurement(measurement) {
@@ -108,13 +119,11 @@ export default class Main extends Component {
         });
     }
 
-    _renderPlaceholderView() {
-        return (
-            <View>
-                <Text>Loading...</Text>
-            </View>
-        );
-    }
+    _renderPlaceholderView = (
+        <View>
+            <Text>Loading...</Text>
+        </View>
+    );
 }
 
 const {width, height} = Dimensions.get('window');
@@ -127,10 +136,7 @@ const $yellow = '#eeee11';
 
 const $vh = 100 / height;
 const $rem = 120 * $vh;
-const $XXL = 1.75 * $rem;
-const $XL = 1.5 * $rem;
-const $L = 1.25 * $rem;
-const $M = 1 * $rem;
+const $M = $rem;
 const $serif = 'monospace';
 
 const styles = StyleSheet.create({

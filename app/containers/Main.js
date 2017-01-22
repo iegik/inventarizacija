@@ -4,36 +4,85 @@ import {
     Dimensions,
     Text,
     View,
+    Switch,
     TouchableHighlight,
     TextInput,
+    InteractionManager,
+    ScrollView,
 } from 'react-native';
 import Camera from 'react-native-camera';
+import InventoryList from './InventoryList';
 
 export default class Main extends Component {
     state = {
         code: '',
         amount: '1',
         measurement: 'gab',
-        price: '0.00',
+        price: '',
+        showCamera: false,
+        renderPlaceholderOnly: true,
+        loadingCamera: true,
+        inventory: [],
     };
 
+    componentDidMount() {
+        InteractionManager.runAfterInteractions(() => {
+            this.setState({
+                renderPlaceholderOnly: false,
+                loadingCamera: false
+            });
+        });
+    }
+
+    renderScan = (
+        <TouchableHighlight style={[styles.btn, {width}]}
+                            onPress={this._onPressButton.bind(this)}>
+            <Text style={[styles.text, styles.btnText,styles.text_center]}>Scan</Text>
+        </TouchableHighlight>
+    );
+
     render() {
+        if (this.state.renderPlaceholderOnly) {
+            return this._renderPlaceholderView;
+        }
         return (
             <View style={styles.container}>
                 <View style={styles.previewWrap}>
-                    <Camera
-                        style={styles.preview}
-                        aspect={Camera.constants.Aspect.fill}
-                        onBarCodeRead={this.readBarCode.bind(this)}
-                        barcodeScannerEnabled={true}
-                    />
+                    {this.state.showCamera ? (
+                        <Camera
+                            style={styles.preview}
+                            aspect={Camera.constants.Aspect.fill}
+                            flashMode={Camera.constants.FlashMode.on}
+                            torchMode={Camera.constants.TorchMode.auto}
+                            onBarCodeRead={this.readBarCode.bind(this)}
+                            barCodeTypes={['ean13']}
+                            barcodeScannerEnabled={true}
+                        />
+                    ) : (
+                        this.renderScan
+                    )}
                 </View>
+                {/*<View style={styles.switch}>*/}
+                    {/*<Switch onValueChange={this._onPressButton.bind(this)}*/}
+                        {/*value={this.state.showCamera} />*/}
+                {/*</View>*/}
+
                 <View style={styles.form}>
                     <View style={[styles.fieldset,styles.code]}>
                         <TextInput
                             style={[styles.text, styles.text_center, styles.field]}
                             value={this.state.code}
                             onChangeText={(code) => this.setState({code})}
+                            placeholder="EAN13"
+                            keyboardType={'numeric'}
+                        />
+                    </View>
+                    <View style={[styles.fieldset,styles.price]}>
+                        <TextInput
+                            style={[styles.text, styles.text_center, styles.field]}
+                            value={this.state.price}
+                            onChangeText={(price) => this.setState({price})}
+                            placeholder="0.00"
                             keyboardType={'numeric'}
                         />
                     </View>
@@ -42,6 +91,7 @@ export default class Main extends Component {
                             style={[styles.text, styles.text_center, styles.field]}
                             value={this.state.amount}
                             onChangeText={(amount) => this.setState({amount})}
+                            placeholder="0"
                             keyboardType={'numeric'}
                         />
                     </View>
@@ -50,18 +100,24 @@ export default class Main extends Component {
                         <TouchableHighlight style={[styles.btn, this.state.measurement === 'kg' ? styles.btn_current : {}]} onPress={()=>this.setMeasurement('kg')} ><Text style={[styles.text, styles.btnText, this.state.measurement === 'kg' ? styles.btnText_current : {}]}>{ 'kg' }</Text></TouchableHighlight>
                         <TouchableHighlight style={[styles.btn, this.state.measurement === 'l' ? styles.btn_current : {}]} onPress={()=>this.setMeasurement('l')} ><Text style={[styles.text, styles.btnText, this.state.measurement === 'l' ? styles.btnText_current : {}]}>{ 'l' }</Text></TouchableHighlight>
                     </View>
-                    <View style={[styles.fieldset,styles.price]}>
-                        <TextInput
-                            style={[styles.text, styles.text_center, styles.field]}
-                            value={this.state.price}
-                            onChangeText={(price) => this.setState({price})}
-                            keyboardType={'numeric'}
-                        />
-                    </View>
-                    <TouchableHighlight style={[styles.btn,styles.btn_primary]} onPress={()=>{}} ><Text style={[styles.text, styles.text_center, styles.btnText, styles.btnText_primary]}>{ 'Submit' }</Text></TouchableHighlight>
+                    <TouchableHighlight style={[styles.btn,styles.btn_primary]} onPress={()=>this.addToInventory()} ><Text style={[styles.text, styles.text_center, styles.btnText, styles.btnText_primary]}>{ 'Submit' }</Text></TouchableHighlight>
                 </View>
+                <InventoryList data={this.state.inventory} style={[styles.inventory]}/>
             </View>
         );
+    }
+
+    addToInventory() {
+        let {inventory, code, amount, measurement, price} = this.state;
+        let index = inventory.length;
+        inventory.forEach((item, i) => {
+            if(item.code === this.state.code){
+                index = i;
+            }
+        });
+
+        inventory[index] = {code, amount, measurement, price};
+        this.setState({inventory});
     }
 
     readBarCode(event) {
@@ -69,12 +125,29 @@ export default class Main extends Component {
         if(this.state.code === code){
             return;
         }
-        this.setState({code});
+        this.setState({
+            code,
+            showCamera: false,
+        });
     }
 
     setMeasurement(measurement) {
         this.setState({measurement})
     }
+
+    _onPressButton(value){
+        InteractionManager.runAfterInteractions(() => {
+            this.setState({
+                showCamera: value,
+            });
+        });
+    }
+
+    _renderPlaceholderView = (
+        <View>
+            <Text>Loading...</Text>
+        </View>
+    );
 }
 
 const {width, height} = Dimensions.get('window');
@@ -87,10 +160,7 @@ const $yellow = '#eeee11';
 
 const $vh = 100 / height;
 const $rem = 120 * $vh;
-const $XXL = 1.75 * $rem;
-const $XL = 1.5 * $rem;
-const $L = 1.25 * $rem;
-const $M = 1 * $rem;
+const $M = $rem;
 const $serif = 'monospace';
 
 const styles = StyleSheet.create({
@@ -101,11 +171,10 @@ const styles = StyleSheet.create({
         fontFamily: $serif
     },
     previewWrap: {
-        flex: 1,
         justifyContent: 'flex-end',
         alignItems: 'center',
-        width,
-        height: 30
+        flexGrow: 1,
+        // height: 150
         //height: Dimensions.get('window').height,
     },
     preview: {
@@ -116,8 +185,7 @@ const styles = StyleSheet.create({
     },
     form: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        flexGrow: 2,
     },
     measurement: {
         flex: 1,
@@ -148,7 +216,6 @@ const styles = StyleSheet.create({
     },
     btnText_primary: {
         color: $darkGray,
-        width,
     },
     text_center: {
         textAlign: 'center',
@@ -160,4 +227,15 @@ const styles = StyleSheet.create({
         padding: 0.25 * $rem,
         width: width - 0.5 * $rem,
     },
+    switch: {
+        alignItems: 'center',
+    },
+    loading: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    inventory: {
+        flexGrow: 1,
+    }
 });

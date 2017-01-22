@@ -8,8 +8,10 @@ import {
     TouchableHighlight,
     TextInput,
     InteractionManager,
+    ScrollView,
 } from 'react-native';
 import Camera from 'react-native-camera';
+import InventoryList from './InventoryList';
 
 export default class Main extends Component {
     state = {
@@ -20,6 +22,7 @@ export default class Main extends Component {
         showCamera: false,
         renderPlaceholderOnly: true,
         loadingCamera: true,
+        inventory: [],
     };
 
     componentDidMount() {
@@ -90,10 +93,24 @@ export default class Main extends Component {
                             keyboardType={'numeric'}
                         />
                     </View>
-                    <TouchableHighlight style={[styles.btn,styles.btn_primary]} onPress={()=>{}} ><Text style={[styles.text, styles.text_center, styles.btnText, styles.btnText_primary]}>{ 'Submit' }</Text></TouchableHighlight>
+                    <TouchableHighlight style={[styles.btn,styles.btn_primary]} onPress={()=>this.addToInventory()} ><Text style={[styles.text, styles.text_center, styles.btnText, styles.btnText_primary]}>{ 'Submit' }</Text></TouchableHighlight>
                 </View>
+                <InventoryList data={this.state.inventory} style={[styles.inventory]}/>
             </View>
         );
+    }
+
+    addToInventory() {
+        let {inventory, code, amount, measurement, price} = this.state;
+        let index = inventory.length;
+        inventory.forEach((item, i) => {
+            if(item.code === this.state.code){
+                index = i;
+            }
+        });
+
+        inventory[index] = {code, amount, measurement, price};
+        this.setState({inventory});
     }
 
     readBarCode(event) {
@@ -147,11 +164,10 @@ const styles = StyleSheet.create({
         fontFamily: $serif
     },
     previewWrap: {
-        flex: 1,
         justifyContent: 'flex-end',
         alignItems: 'center',
-        width,
-        height: 25
+        flexGrow: 1,
+        // height: 150
         //height: Dimensions.get('window').height,
     },
     preview: {
@@ -162,8 +178,7 @@ const styles = StyleSheet.create({
     },
     form: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        flexGrow: 2,
     },
     measurement: {
         flex: 1,
@@ -194,7 +209,6 @@ const styles = StyleSheet.create({
     },
     btnText_primary: {
         color: $darkGray,
-        width,
     },
     text_center: {
         textAlign: 'center',
@@ -213,5 +227,8 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    inventory: {
+        flexGrow: 1,
     }
 });

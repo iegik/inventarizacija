@@ -18,7 +18,7 @@ export default class Main extends Component {
         code: '',
         amount: '1',
         measurement: 'gab',
-        price: '0.00',
+        price: '',
         showCamera: false,
         renderPlaceholderOnly: true,
         loadingCamera: true,
@@ -48,15 +48,19 @@ export default class Main extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.previewWrap}>
-                    {this.state.showCamera ? (<Camera
-                        style={styles.preview}
-                        aspect={Camera.constants.Aspect.fill}
-                        flashMode={Camera.constants.FlashMode.on}
-                        torchMode={Camera.constants.TorchMode.auto}
-                        onBarCodeRead={this.readBarCode.bind(this)}
-                        barCodeTypes={['ean13']}
-                        barcodeScannerEnabled={true}
-                        />) : (this.renderScan) }
+                    {this.state.showCamera ? (
+                        <Camera
+                            style={styles.preview}
+                            aspect={Camera.constants.Aspect.fill}
+                            flashMode={Camera.constants.FlashMode.on}
+                            torchMode={Camera.constants.TorchMode.auto}
+                            onBarCodeRead={this.readBarCode.bind(this)}
+                            barCodeTypes={['ean13']}
+                            barcodeScannerEnabled={true}
+                        />
+                    ) : (
+                        this.renderScan
+                    )}
                 </View>
                 {/*<View style={styles.switch}>*/}
                     {/*<Switch onValueChange={this._onPressButton.bind(this)}*/}
@@ -69,6 +73,16 @@ export default class Main extends Component {
                             style={[styles.text, styles.text_center, styles.field]}
                             value={this.state.code}
                             onChangeText={(code) => this.setState({code})}
+                            placeholder="EAN13"
+                            keyboardType={'numeric'}
+                        />
+                    </View>
+                    <View style={[styles.fieldset,styles.price]}>
+                        <TextInput
+                            style={[styles.text, styles.text_center, styles.field]}
+                            value={this.state.price}
+                            onChangeText={(price) => this.setState({price})}
+                            placeholder="0.00"
                             keyboardType={'numeric'}
                         />
                     </View>
@@ -77,6 +91,7 @@ export default class Main extends Component {
                             style={[styles.text, styles.text_center, styles.field]}
                             value={this.state.amount}
                             onChangeText={(amount) => this.setState({amount})}
+                            placeholder="0"
                             keyboardType={'numeric'}
                         />
                     </View>
@@ -84,14 +99,6 @@ export default class Main extends Component {
                         <TouchableHighlight style={[styles.btn, this.state.measurement === 'gab' ? styles.btn_current : {}]} onPress={()=>this.setMeasurement('gab')} ><Text style={[styles.text, styles.btnText, this.state.measurement === 'gab' ? styles.btnText_current : {}]}>{ 'gab' }</Text></TouchableHighlight>
                         <TouchableHighlight style={[styles.btn, this.state.measurement === 'kg' ? styles.btn_current : {}]} onPress={()=>this.setMeasurement('kg')} ><Text style={[styles.text, styles.btnText, this.state.measurement === 'kg' ? styles.btnText_current : {}]}>{ 'kg' }</Text></TouchableHighlight>
                         <TouchableHighlight style={[styles.btn, this.state.measurement === 'l' ? styles.btn_current : {}]} onPress={()=>this.setMeasurement('l')} ><Text style={[styles.text, styles.btnText, this.state.measurement === 'l' ? styles.btnText_current : {}]}>{ 'l' }</Text></TouchableHighlight>
-                    </View>
-                    <View style={[styles.fieldset,styles.price]}>
-                        <TextInput
-                            style={[styles.text, styles.text_center, styles.field]}
-                            value={this.state.price}
-                            onChangeText={(price) => this.setState({price})}
-                            keyboardType={'numeric'}
-                        />
                     </View>
                     <TouchableHighlight style={[styles.btn,styles.btn_primary]} onPress={()=>this.addToInventory()} ><Text style={[styles.text, styles.text_center, styles.btnText, styles.btnText_primary]}>{ 'Submit' }</Text></TouchableHighlight>
                 </View>

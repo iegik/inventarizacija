@@ -1,8 +1,29 @@
 import React, {Component} from 'react';
 import {
+    Container,
+    Header,
+    Badge,
+    Title,
+    Content,
+    Footer,
+    FooterTab,
+    Form,
+    Button,
+    Left,
+    Right,
+    Body,
+    Icon,
+    Item,
+    Input,
+    H1, H2, H3,
+    Text,
+    Card,
+    CardItem,
+    Spinner,
+} from 'native-base';
+import {
     StyleSheet,
     Dimensions,
-    Text,
     View,
     Switch,
     TouchableHighlight,
@@ -34,76 +55,92 @@ export default class Main extends Component {
         });
     }
 
-    renderScan = (
-        <TouchableHighlight style={[styles.btn, {width}]}
-                            onPress={this._onPressButton.bind(this)}>
-            <Text style={[styles.text, styles.btnText,styles.text_center]}>Scan</Text>
-        </TouchableHighlight>
-    );
-
     render() {
         if (this.state.renderPlaceholderOnly) {
             return this._renderPlaceholderView;
         }
-        return (
-            <View style={styles.container}>
-                <View style={styles.previewWrap}>
-                    {this.state.showCamera ? (
-                        <Camera
-                            style={styles.preview}
-                            aspect={Camera.constants.Aspect.fill}
-                            flashMode={Camera.constants.FlashMode.on}
-                            torchMode={Camera.constants.TorchMode.auto}
-                            onBarCodeRead={this.readBarCode.bind(this)}
-                            barCodeTypes={['ean13']}
-                            barcodeScannerEnabled={true}
-                        />
-                    ) : (
-                        this.renderScan
-                    )}
-                </View>
-                {/*<View style={styles.switch}>*/}
-                    {/*<Switch onValueChange={this._onPressButton.bind(this)}*/}
-                        {/*value={this.state.showCamera} />*/}
-                {/*</View>*/}
+        if (this.state.showCamera) {
+            return (
+                <Camera
+                    style={styles.preview}
+                    aspect={Camera.constants.Aspect.fill}
+                    flashMode={Camera.constants.FlashMode.on}
+                    torchMode={Camera.constants.TorchMode.auto}
+                    onBarCodeRead={this.readBarCode.bind(this)}
+                    barCodeTypes={['ean13']}
+                    barcodeScannerEnabled={true}
+                />
+            );
+        }
 
-                <View style={styles.form}>
-                    <View style={[styles.fieldset,styles.code]}>
-                        <TextInput
-                            style={[styles.text, styles.text_center, styles.field]}
-                            value={this.state.code}
-                            onChangeText={(code) => this.setState({code})}
-                            placeholder="EAN13"
-                            keyboardType={'numeric'}
-                        />
-                    </View>
-                    <View style={[styles.fieldset,styles.price]}>
-                        <TextInput
-                            style={[styles.text, styles.text_center, styles.field]}
-                            value={this.state.price}
-                            onChangeText={(price) => this.setState({price})}
-                            placeholder="0.00"
-                            keyboardType={'numeric'}
-                        />
-                    </View>
-                    <View style={[styles.fieldset,styles.amount]}>
-                        <TextInput
-                            style={[styles.text, styles.text_center, styles.field]}
-                            value={this.state.amount}
-                            onChangeText={(amount) => this.setState({amount})}
-                            placeholder="0"
-                            keyboardType={'numeric'}
-                        />
-                    </View>
-                    <View style={[styles.fieldset,styles.measurement]}>
-                        <TouchableHighlight style={[styles.btn, this.state.measurement === 'gab' ? styles.btn_current : {}]} onPress={()=>this.setMeasurement('gab')} ><Text style={[styles.text, styles.btnText, this.state.measurement === 'gab' ? styles.btnText_current : {}]}>{ 'gab' }</Text></TouchableHighlight>
-                        <TouchableHighlight style={[styles.btn, this.state.measurement === 'kg' ? styles.btn_current : {}]} onPress={()=>this.setMeasurement('kg')} ><Text style={[styles.text, styles.btnText, this.state.measurement === 'kg' ? styles.btnText_current : {}]}>{ 'kg' }</Text></TouchableHighlight>
-                        <TouchableHighlight style={[styles.btn, this.state.measurement === 'l' ? styles.btn_current : {}]} onPress={()=>this.setMeasurement('l')} ><Text style={[styles.text, styles.btnText, this.state.measurement === 'l' ? styles.btnText_current : {}]}>{ 'l' }</Text></TouchableHighlight>
-                    </View>
-                    <TouchableHighlight style={[styles.btn,styles.btn_primary]} onPress={()=>this.addToInventory()} ><Text style={[styles.text, styles.text_center, styles.btnText, styles.btnText_primary]}>{ 'Submit' }</Text></TouchableHighlight>
-                </View>
-                <InventoryList data={this.state.inventory} style={[styles.inventory]}/>
-            </View>
+        return (
+            <Container>
+                <Header>
+                    <Left>
+                        <Button transparent>
+                            <Icon name='menu' />
+                        </Button>
+                    </Left>
+                    <Body>
+                        <Title>Header</Title>
+                    </Body>
+                    <Right />
+                </Header>
+                <Content>
+                    <Card>
+                        <CardItem>
+                            <Form>
+                                <Item>
+                                    <Input
+                                        value={this.state.code}
+                                        onChangeText={(code) => this.setState({code})}
+                                        placeholder="EAN13"
+                                        keyboardType={'numeric'}
+                                    />
+                                    <Icon name='camera' onPress={this._onPressButton.bind(this)} />
+                                </Item>
+                                <Item>
+                                    <Input
+                                        value={this.state.price}
+                                        onChangeText={(price) => this.setState({price})}
+                                        placeholder="0.00"
+                                        keyboardType={'numeric'}
+                                    />
+                                </Item>
+                                <Item>
+                                    <Input
+                                        value={this.state.amount}
+                                        onChangeText={(amount) => this.setState({amount})}
+                                        placeholder="0"
+                                        keyboardType={'numeric'}
+                                    />
+                                </Item>
+                                <View style={styles.buttonGroup}>
+                                    {['l','kg','gab'].map((value)=>(
+                                        <Button
+                                            key={value}
+                                            light={this.state.measurement !== value}
+                                            style={styles.buttonGroupBtn}
+                                            active={this.state.measurement === value}
+                                            onPress={()=>this.setMeasurement(value)}
+                                        >
+                                            <Text textStyle={{textAlign: 'center'}}>{ value }</Text>
+                                        </Button>
+                                    ))}
+                                </View>
+                            </Form>
+                        </CardItem>
+                        <CardItem footer>
+                            <Button full onPress={()=>this.addToInventory()} >
+                                <Text>{ 'Submit' }</Text>
+                            </Button>
+                        </CardItem>
+                    </Card>
+                    <Card>
+                        <InventoryList data={this.state.inventory} style={[styles.inventory]}/>
+                    </Card>
+                </Content>
+            </Container>
         );
     }
 
@@ -144,96 +181,30 @@ export default class Main extends Component {
     }
 
     _renderPlaceholderView = (
-        <View>
-            <Text>Loading...</Text>
-        </View>
+        <Spinner/>
     );
 }
 
 const {width, height} = Dimensions.get('window');
 
-const $black = '#000000';
-const $white = '#eeeeee';
-const $lightGray = '#333333';
-const $darkGray = '#111111';
-const $yellow = '#eeee11';
-
 const $vh = 100 / height;
 const $rem = 120 * $vh;
-const $M = $rem;
-const $serif = 'monospace';
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    text: {
-        fontFamily: $serif
-    },
-    previewWrap: {
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-        flexGrow: 1,
-        // height: 150
-        //height: Dimensions.get('window').height,
-    },
+const styles = ({
     preview: {
         width,
         height,
     },
-    code: {
-    },
-    form: {
-        flex: 1,
-        flexGrow: 2,
-    },
-    measurement: {
+    buttonGroup: {
         flex: 1,
         flexDirection: 'row',
-    },
-    btn: {
-        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: $lightGray,
-        borderColor: $black,
-        borderWidth: 1
+        marginTop: 1 * $rem,
     },
-    btn_primary: {
-        backgroundColor: $yellow,
-    },
-    btn_current: {
-        backgroundColor: $yellow,
-    },
-    btnText: {
-        flex:1,
-        color: $white,
-        fontSize: $M,
-        textAlignVertical: 'center',
-    },
-    btnText_current: {
-        color: $darkGray,
-    },
-    btnText_primary: {
-        color: $darkGray,
-    },
-    text_center: {
-        textAlign: 'center',
-    },
-    field: {
-        fontSize: $M,
-    },
-    fieldset:{
-        padding: 0.25 * $rem,
-        width: width - 0.5 * $rem,
-    },
-    switch: {
-        alignItems: 'center',
-    },
-    loading: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+    buttonGroupBtn: {
+        borderRadius: 0,
+        width: width / 3 - (0.25 * $rem),
     },
     inventory: {
         flexGrow: 1,

@@ -22,7 +22,6 @@ export default (variables = variable) => {
           right: null,
           flex: 1,
           height: null,
-          width: null,
           fontSize: variables.inputFontSize,
         },
         'NativeBase.Input': {
@@ -43,7 +42,6 @@ export default (variables = variable) => {
         'NativeBase.Input': {
           alignSelf: (Platform.OS === 'ios') ? 'stretch' : 'flex-start',
           flex: 1,
-          width: (Platform.OS === 'ios') ? null : variables.deviceWidth - 25,
           fontSize: variables.inputFontSize,
         },
         flexDirection: null,
@@ -56,7 +54,6 @@ export default (variables = variable) => {
           right: null,
           paddingRight: 20,
           height: null,
-          width: null,
           fontSize: variables.inputFontSize,
         },
         'NativeBase.Input': {

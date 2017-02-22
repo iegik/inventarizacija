@@ -1,72 +1,59 @@
 import React, {Component} from 'react';
 import {
     StyleSheet,
-    Text,
     View,
     ScrollView,
 } from 'react-native';
 import Grid from 'react-native-grid-component';
+import {
+    Form,
+    Left,
+    Right,
+    Body,
+    Item,
+    Text,
+    List,
+    ListItem,
+} from 'native-base';
 const {keys} = Object;
 
 export default class InventoryList extends Component {
     _renderColumn = (data, i) => (
-        <View
+        <ListItem
             key={i}
-            style={[styles.column, styles['column_'+data.key]]}
+            style={styles['column_'+data.key]}
         >
             <Text>{data.value}</Text>
-        </View>
+        </ListItem>
     );
 
     _renderRow = (data, i) => {
         let cols = keys(data).map((key)=>({key,value:data[key]}));
-            //.filter((item) => ['code'].indexOf(item.key) > -1);
-        // , this.props.current === data.code ? styles.current : {}
         return (
-            <View
+            <Grid
                 key={i}
-                style={[styles.row]}
-            >
-                <Grid
-                    renderItem={this._renderColumn}
-                    itemsPerRow={cols.length}
-                    data={cols}
-                />
-            </View>
+                renderItem={this._renderColumn}
+                itemsPerRow={cols.length}
+                data={cols}
+            />
         );
     };
 
     render() {
-        let {style, data} = this.props;
+        let {data} = this.props;
         return (
-            <ScrollView style={[styles.container, style]}>
+            <List>
                 <Grid
                     renderItem={this._renderRow}
                     itemsPerRow={1}
                     data={data}
                 />
-            </ScrollView>
+            </List>
         );
     }
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex:1,
-    },
-    row: {
-        flex: 1,
-        borderBottomWidth: 1,
-    },
-    column: {
-        flex: 1,
-        // flexGrow: 2,
-        // flexDirection: 'row',
-        flexWrap: 'nowrap',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 50,
-    },
+const styles = {
     column_title: {
         flexGrow : 4,
     },
@@ -85,7 +72,4 @@ const styles = StyleSheet.create({
         flexShrink: 1,
         flexGrow : 2,
     },
-    current: {
-        backgroundColor: '#00FF00'
-    }
-});
+};

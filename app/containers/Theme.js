@@ -2,19 +2,25 @@ import React, { Component } from 'react';
 import {
     Container,
     Header,
+    Badge,
     Title,
     Content,
     Footer,
     FooterTab,
+    Form,
     Button,
     Left,
     Right,
     Body,
     Icon,
+    Item,
+    Input,
     H1, H2, H3,
     Text,
     Card,
-    CardItem
+    CardItem,
+    Spinner,
+    List,
 } from 'native-base';
 import {View} from 'react-native';
 

@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { StyleProvider } from 'native-base';
 import {
     StyleSheet,
     StatusBar,
@@ -6,6 +7,7 @@ import {
     View
 } from 'react-native';
 import Main from './containers/Main';
+import getTheme from './native-base-theme/components';
 
 // https://facebook.github.io/react-native/docs/animations.html#layoutanimation
 UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -13,16 +15,10 @@ UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationE
 export default class App extends Component {
     render() {
         return (
-            <View style={styles.container}>
-                <StatusBar backgroundColor='transparent' animated={true} translucent={true} barStyle="light-content"/>
-                <Main />
-            </View>
+            <StyleProvider style={getTheme()} >
+                {/*<StatusBar backgroundColor='transparent' animated={true} translucent={true} barStyle="light-content"/>*/}
+                <Main style={{flex:1}}/>
+            </StyleProvider>
         );
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-});

@@ -7,7 +7,7 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   viewBox="0 0 48 48"
+   viewBox="0 0 52 52"
    x="0px"
    y="0px"
    id="svg2"
@@ -16,9 +16,9 @@
    width="100%"
    height="100%"
    sodipodi:docname="noun_783551_cc.svg"
-   inkscape:export-filename="C:\Users\STiM\Desktop\Downloads\noun_783551_cc.png"
-   inkscape:export-xdpi="960"
-   inkscape:export-ydpi="960">
+   inkscape:export-filename="D:\Development\inventarizacija\android\app\src\main\res\mipmap-xxhdpi\ic_launcher.png"
+   inkscape:export-xdpi="249.23"
+   inkscape:export-ydpi="249.23">
   <metadata
      id="metadata14">
     <rdf:RDF>
@@ -32,7 +32,39 @@
     </rdf:RDF>
   </metadata>
   <defs
-     id="defs12" />
+     id="defs12">
+    <filter
+       id="filter3930"
+       inkscape:label="Drop Shadow"
+       color-interpolation-filters="sRGB">
+      <feFlood
+         id="feFlood3932"
+         flood-opacity="0.5"
+         flood-color="rgb(0,0,0)"
+         result="flood" />
+      <feComposite
+         in2="SourceGraphic"
+         id="feComposite3934"
+         in="flood"
+         operator="in"
+         result="composite1" />
+      <feGaussianBlur
+         id="feGaussianBlur3936"
+         stdDeviation="0.25"
+         result="blur" />
+      <feOffset
+         id="feOffset3938"
+         dx="0.5"
+         dy="0.5"
+         result="offset" />
+      <feComposite
+         in2="offset"
+         id="feComposite3940"
+         in="SourceGraphic"
+         operator="over"
+         result="composite2" />
+    </filter>
+  </defs>
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -52,15 +84,15 @@
      fit-margin-right="0"
      fit-margin-bottom="0"
      inkscape:zoom="3.9333333"
-     inkscape:cx="-10.373099"
-     inkscape:cy="27.311041"
+     inkscape:cx="58.740021"
+     inkscape:cy="50.48305"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg2" />
   <path
-     d="m 7.6148357,37.296369 2.7478983,0 0,-26.492775 -2.7478983,0 0,26.492775 z m 5.8076813,0 2.747898,0 0,-26.492775 -2.747898,0 0,26.492775 z m 5.929963,0 5.495795,0 0,-26.492775 -5.495795,0 0,26.492775 z m 8.725949,0 2.747898,0 0,-26.492775 -2.747898,0 0,26.492775 z m 6.269328,0 5.495796,0 0,-26.492775 -5.495796,0 0,26.492775 z M 43.847378,45 l -6.076977,0 0,-2.716372 6.076977,0 c 0.773533,0 1.404175,-0.737496 1.404175,-1.644764 l 0,-7.085656 2.747898,0 0,7.085656 C 47.999451,43.044212 46.137751,45 43.847378,45 z m -32.267738,-0.66714 -7.1678911,0 C 1.9798597,44.33286 -5e-7,42.49116 -5e-7,40.228422 l 0,-6.008615 2.7478977,0 0,6.008615 c 0,0.766017 0.7460542,1.388063 1.6638517,1.388063 l 7.1678911,0 0,2.716375 z m -8.8313306,-29.886068 -2.7478976763,0 0,-7.0856577 c 0,-2.4039889 1.8617005763,-4.3611346 4.1520739763,-4.3611346 l 6.0769753,0 0,2.7163719 -6.0769753,0 c -0.7735339,0 -1.4041763,0.7388536 -1.4041763,1.6447627 l 0,7.0856577 z M 48,13.77965 l -2.747897,0 0,-6.0072557 c 0,-0.766017 -0.746054,-1.3894248 -1.663853,-1.3894248 l -7.16789,0 0,-2.7163721 7.167891,0 C 46.021514,3.6665974 48,5.5082973 48,7.7723943 l 0,6.0072557 z"
+     d="m 9.6148355,39.296369 2.7478985,0 0,-26.492775 -2.7478985,0 0,26.492775 z m 5.8076815,0 2.747898,0 0,-26.492775 -2.747898,0 0,26.492775 z m 5.929963,0 5.495795,0 0,-26.492775 -5.495795,0 0,26.492775 z m 8.725949,0 2.747898,0 0,-26.492775 -2.747898,0 0,26.492775 z m 6.269328,0 5.495796,0 0,-26.492775 -5.495796,0 0,26.492775 z M 45.847378,47 l -6.076977,0 0,-2.716372 6.076977,0 c 0.773533,0 1.404175,-0.737496 1.404175,-1.644764 l 0,-7.085656 2.747898,0 0,7.085656 C 49.999451,45.044212 48.137751,47 45.847378,47 z m -32.267738,-0.66714 -7.1678911,0 c -2.4318891,0 -4.4117493,-1.8417 -4.4117493,-4.104438 l 0,-6.008615 2.7478977,0 0,6.008615 c 0,0.766017 0.7460542,1.388063 1.6638516,1.388063 l 7.1678911,0 0,2.716375 z m -8.8313306,-29.886068 -2.7478976,0 0,-7.0856577 c 0,-2.4039882 1.8617005,-4.3611342 4.1520739,-4.3611342 l 6.0769753,0 0,2.716372 -6.0769753,0 c -0.7735339,0 -1.4041763,0.738853 -1.4041763,1.6447622 l 0,7.0856577 z M 50,15.77965 l -2.747897,0 0,-6.0072561 c 0,-0.7660168 -0.746054,-1.3894238 -1.663853,-1.3894238 l -7.16789,0 0,-2.716372 7.167891,0 C 48.021514,5.6665981 50,7.5082971 50,9.7723939 l 0,6.0072561 z"
      id="path4"
      inkscape:connector-curvature="0"
-     style="fill:#000000;fill-rule:evenodd" />
+     style="fill:#607d8b;fill-opacity:1;fill-rule:evenodd;filter:url(#filter3930)" />
 </svg>

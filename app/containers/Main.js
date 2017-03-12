@@ -18,14 +18,9 @@ import {
     Spinner,
 } from 'native-base';
 import {
-    StyleSheet,
     Dimensions,
     View,
-    Switch,
-    TouchableHighlight,
-    TextInput,
     InteractionManager,
-    ScrollView,
 } from 'react-native';
 import Camera from 'react-native-camera';
 import InventoryList from './InventoryList';
@@ -65,7 +60,19 @@ export default class Main extends Component {
                     onBarCodeRead={this.readBarCode.bind(this)}
                     barCodeTypes={['ean13']}
                     barcodeScannerEnabled={true}
-                />
+                >
+                    <Header>
+                        <Left>
+                            <Button title="Back" transparent onPress={()=>this.setState({showCamera: false})}>
+                                <Icon name='arrow-back' />
+                            </Button>
+                        </Left>
+                        <Body>
+                        <Title>Scanner</Title>
+                        </Body>
+                        <Right />
+                    </Header>
+                </Camera>
             );
         }
 
@@ -73,12 +80,12 @@ export default class Main extends Component {
             <Container>
                 <Header>
                     <Left>
-                        <Button transparent>
+                        <Button title="Menu" transparent onPress={() => {}}>
                             <Icon name='menu' />
                         </Button>
                     </Left>
                     <Body>
-                        <Title>Header</Title>
+                        <Title>Inventory</Title>
                     </Body>
                     <Right />
                 </Header>
@@ -86,7 +93,7 @@ export default class Main extends Component {
                     <Card>
                         <CardItem>
                             <Form>
-                                <Item>
+                                <Item label="Code">
                                     <Input
                                         value={this.state.code}
                                         onChangeText={(code) => this.setState({code})}
@@ -95,7 +102,7 @@ export default class Main extends Component {
                                     />
                                     <Icon name='camera' onPress={this._onPressButton.bind(this)} />
                                 </Item>
-                                <Item>
+                                <Item label="Price">
                                     <Input
                                         value={this.state.price}
                                         onChangeText={(price) => this.setState({price})}
@@ -103,7 +110,7 @@ export default class Main extends Component {
                                         keyboardType={'numeric'}
                                     />
                                 </Item>
-                                <Item>
+                                <Item label="Amount">
                                     <Input
                                         value={this.state.amount}
                                         onChangeText={(amount) => this.setState({amount})}
@@ -114,6 +121,7 @@ export default class Main extends Component {
                                 <View style={styles.buttonGroup}>
                                     {['l','kg','gab'].map((value)=>(
                                         <Button
+                                            title="Measurement"
                                             key={value}
                                             light={this.state.measurement !== value}
                                             style={styles.buttonGroupBtn}
@@ -127,7 +135,7 @@ export default class Main extends Component {
                             </Form>
                         </CardItem>
                         <CardItem footer>
-                            <Button full onPress={()=>this.addToInventory()} >
+                            <Button title="Submit" full onPress={()=>this.addToInventory()} >
                                 <Text>{ 'Submit' }</Text>
                             </Button>
                         </CardItem>
@@ -196,7 +204,7 @@ const styles = ({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 1 * $rem,
+        marginTop: $rem,
     },
     buttonGroupBtn: {
         borderRadius: 0,

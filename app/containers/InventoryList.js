@@ -1,54 +1,45 @@
 import React, {Component} from 'react';
 import {
-    StyleSheet,
-    View,
-    ScrollView,
-} from 'react-native';
-import Grid from 'react-native-grid-component';
-import {
-    Form,
-    Left,
-    Right,
-    Body,
-    Item,
     Text,
     List,
     ListItem,
+    Grid,
+    Col,
 } from 'native-base';
+
 const {keys} = Object;
 
 export default class InventoryList extends Component {
-    _renderColumn = (data, i) => (
-        <ListItem
-            key={i}
-            style={styles['column_'+data.key]}
-        >
+    _renderColumn = (data, key) => (
+        <Col {...{
+            key,
+            style: styles['column_'+data.key],
+        }} >
             <Text>{data.value}</Text>
-        </ListItem>
+        </Col>
     );
 
-    _renderRow = (data, i) => {
+    _renderRow = (data, key) => {
+        let renderItem = this._renderColumn.bind(this);
         let cols = keys(data).map((key)=>({key,value:data[key]}));
         return (
-            <Grid
-                key={i}
-                renderItem={this._renderColumn}
-                itemsPerRow={cols.length}
-                data={cols}
-            />
+            <ListItem {...{key}}>
+                <Grid {...{
+                    renderItem
+                }} >
+                    {cols.map(renderItem)}
+                </Grid>
+            </ListItem>
         );
     };
 
     render() {
         let {data} = this.props;
         return (
-            <List>
-                <Grid
-                    renderItem={this._renderRow}
-                    itemsPerRow={1}
-                    data={data}
-                />
-            </List>
+            <List
+                dataArray={data}
+                renderRow={this._renderRow.bind(this)}
+            />
         );
     }
 }

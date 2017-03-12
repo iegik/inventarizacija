@@ -6,7 +6,7 @@ import {
     UIManager,
     View
 } from 'react-native';
-import Main from './containers/Main';
+import Main from './containers/Navigation';
 import getTheme from './native-base-theme/components';
 
 // https://facebook.github.io/react-native/docs/animations.html#layoutanimation

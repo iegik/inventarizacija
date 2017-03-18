@@ -25,6 +25,7 @@ import {
 import Camera from 'react-native-camera';
 import InventoryList from './InventoryList';
 import InventoryStore from '../stores/InventoryStore';
+import ProductStore from '../stores/ProductStore';
 import actionTypes from '../stores/actionTypes';
 
 const {
@@ -32,15 +33,25 @@ const {
     INVENTORY_UPDATE,
     INVENTORY_DELETE,
     INVENTORY_FLUSH,
+    CURRENT_PRODUCT_INCRIMENT,
+    CURRENT_PRODUCT_DECRIMENT,
+    CURRENT_PRODUCT_UPDATE,
+    SET_CURRENT_PRODUCT_CODE,
+    SET_CURRENT_PRODUCT_PRICE,
+    SET_CURRENT_PRODUCT_AMOUNT,
+    SET_CURRENT_PRODUCT_MEASUREMENT,
 } = actionTypes;
 let inventoryStore = new InventoryStore();
+let productStore = new ProductStore();
 
 export default class extends Component {
     state = {
-        code: '',
-        amount: '1',
-        measurement: 'gab',
-        price: '',
+        currentProduct: productStore.reducer({
+            code: '',
+            amount: 1,
+            measurement: 'gab',
+            price: '',
+        }),
         showCamera: false,
         renderPlaceholderOnly: true,
         loadingCamera: true,
@@ -48,9 +59,25 @@ export default class extends Component {
     };
 
     dispatch(action) {
-        this.setState(prevState => ({
-            inventory: inventoryStore.reducer(prevState.inventory, action),
-        }));
+        this.setState((prevState) => {
+            let currentProduct = productStore.reducer(prevState.currentProduct, action);
+            let inventory = inventoryStore.reducer(prevState.inventory, action);
+            switch (action.type) {
+                case SET_CURRENT_PRODUCT_PRICE:
+                    inventory = inventoryStore.reducer(inventory, {type: INVENTORY_UPDATE, value: currentProduct});
+                    break;
+                case SET_CURRENT_PRODUCT_AMOUNT:
+                    inventory = inventoryStore.reducer(inventory, {type: INVENTORY_UPDATE, value: currentProduct});
+                    break;
+                case SET_CURRENT_PRODUCT_MEASUREMENT:
+                    inventory = inventoryStore.reducer(inventory, {type: INVENTORY_UPDATE, value: currentProduct});
+                    break;
+            }
+            return {
+                currentProduct,
+                inventory,
+            }
+        });
     }
 
     componentDidMount() {
@@ -111,8 +138,8 @@ export default class extends Component {
                             <Form>
                                 <Item label="Code">
                                     <Input
-                                        value={this.state.code}
-                                        onChangeText={(code) => this.setState({code})}
+                                        value={this.state.currentProduct.code}
+                                        onChangeText={(value) => this.dispatch({type: SET_CURRENT_PRODUCT_CODE, value})}
                                         onEndEditing={this.updateInventory.bind(this)}
                                         placeholder="EAN13"
                                         keyboardType={'numeric'}
@@ -123,7 +150,7 @@ export default class extends Component {
                                 <Item label="Price">
                                     <Input
                                         value={this.state.price}
-                                        onChangeText={(price) => this.setState({price}, this.updateInventory.bind(this))}
+                                        onChangeText={(value) => this.dispatch({type: SET_CURRENT_PRODUCT_PRICE, value})}
                                         placeholder="0.00"
                                         keyboardType={'numeric'}
                                         selectTextOnFocus={true}
@@ -132,7 +159,7 @@ export default class extends Component {
                                 <Item label="Amount">
                                     <Input
                                         value={this.state.amount}
-                                        onChangeText={(amount) => this.setState({amount}, this.updateInventory.bind(this))}
+                                        onChangeText={(value) => this.dispatch({type: SET_CURRENT_PRODUCT_AMOUNT, value})}
                                         placeholder="0"
                                         keyboardType={'numeric'}
                                         selectTextOnFocus={true}
@@ -146,7 +173,7 @@ export default class extends Component {
                                             light={this.state.measurement !== value}
                                             style={styles.buttonGroupBtn}
                                             active={this.state.measurement === value}
-                                            onPress={()=>this.setMeasurement(value)}
+                                            onPress={() => this.dispatch({type: SET_CURRENT_PRODUCT_MEASUREMENT, value})}
                                         >
                                             <Text textStyle={{textAlign: 'center'}}>{ value }</Text>
                                         </Button>
@@ -169,8 +196,7 @@ export default class extends Component {
     }
 
     updateInventory() {
-        let {code, amount, measurement, price} = this.state;
-        this.dispatch({type: INVENTORY_UPDATE, value: {code, amount, measurement, price}});
+        this.dispatch({type: INVENTORY_UPDATE, value: this.state.currentProduct});
     }
 
     readBarCode(event) {
@@ -182,10 +208,6 @@ export default class extends Component {
             code,
             showCamera: false,
         });
-    }
-
-    setMeasurement(measurement) {
-        this.setState({measurement}, this.updateInventory.bind(this))
     }
 
     _onPressButton(value){

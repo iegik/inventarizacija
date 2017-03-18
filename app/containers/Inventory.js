@@ -23,10 +23,20 @@ import {
     InteractionManager,
 } from 'react-native';
 import Camera from 'react-native-camera';
+import RNFS from 'react-native-fs';
+
 import InventoryList from './InventoryList';
 import InventoryStore from '../stores/InventoryStore';
 import ProductStore from '../stores/ProductStore';
 import actionTypes from '../stores/actionTypes';
+
+// MainBundlePath (String) The absolute path to the main bundle directory     undefined/test.csv
+// CachesDirectoryPath (String) The absolute path to the caches directory     /data/data/com.inventarizacija/cache/test.csv
+// DocumentDirectoryPath (String) The absolute path to the document directory /data/data/com.inventarizacija/files/test.csv
+// TemporaryDirectoryPath (String) The absolute path to the temporary directory (iOS only)
+// ExternalDirectoryPath (String) The absolute path to the external files, shared directory (android only) /storage/emulated/0/Android/data/com.inventarizacija/files/test.csv
+// ExternalStorageDirectoryPath (String) The absolute path to the external storage, shared directory (android only) /storage/emulated/0/test.csv
+const BASE_PATH = RNFS.ExternalStorageDirectoryPath;
 
 const {
     INVENTORY_CREATE,
@@ -182,8 +192,8 @@ export default class extends Component {
                             </Form>
                         </CardItem>
                         <CardItem footer>
-                            <Button title="Submit" full onPress={()=>this.updateInventory()} >
-                                <Text>{ 'Submit' }</Text>
+                            <Button title="Submit" full onPress={()=>this.state.inventory.length ? this.exportData() : this.importData()} >
+                                <Text>{ 'Save' }</Text>
                             </Button>
                         </CardItem>
                     </Card>
@@ -197,6 +207,63 @@ export default class extends Component {
 
     updateInventory() {
         this.dispatch({type: INVENTORY_UPDATE, value: this.state.currentProduct});
+    }
+
+    getFileName() {
+        return 'inventarizacija.csv';
+    }
+    stringify(inventory){
+        return inventory.map(({code, amount, measurement, price}) => [code, amount, measurement, price].join(',')).join(';\n');
+    }
+    parse(contents){
+        return contents.split(';\n').map((row) => {
+            let cols = row.split(',');
+            return {code: cols[0], amount: cols[1], measurement: cols[2], price: cols[3]}
+        });
+    }
+
+    exportData(){
+        let {inventory} = this.state;
+        let fileName = this.getFileName();
+        let path = BASE_PATH + '/' + fileName;
+        let data = this.stringify(inventory);
+
+        RNFS.writeFile(path, data, 'utf8')
+            .then(() => {
+                console.log('FILE WRITTEN!', path, data);
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+    }
+
+    importData() {
+        let fileName = this.getFileName();
+
+        // get a list of files and directories in the main bundle
+        RNFS.readDir(BASE_PATH)
+            .then((result) => {
+                let file = result.filter((file) => file.name === fileName)[0];
+                if(!file){
+                    return Promise.reject({message: 'File not found', code: 404})
+                }
+                // stat the first file
+                return Promise.all([RNFS.stat(file.path), file.path]);
+            })
+            .then((statResult) => {
+                if (statResult[0].isFile()) {
+                    // if we have a file, read it
+                    return RNFS.readFile(statResult[1], 'utf8');
+                }
+                return Promise.reject({message: 'Unsupported Media Type', code: 415});
+            })
+            .then((contents) => {
+                let inventory = this.parse(contents);
+                this.setState({inventory})
+            })
+            .catch((err) => {
+                console.log(err.message, err.code);
+            });
     }
 
     readBarCode(event) {

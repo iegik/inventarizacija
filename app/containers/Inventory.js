@@ -200,14 +200,12 @@ export default class extends Component {
     }
 
     readBarCode(event) {
-        let code = event.data;
-        if(this.state.code === code){
+        let value = event.data;
+        if(this.state.code === value){
             return;
         }
-        this.setState({
-            code,
-            showCamera: false,
-        });
+        this.dispatch({type: SET_CURRENT_PRODUCT_CODE, value});
+        this.setState({showCamera: false});
     }
 
     _onPressButton(value){

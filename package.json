@@ -6,8 +6,8 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "android": "node node_modules/react-native/local-cli/cli.js run-android",
-    "android_release": "cd android && gradlew installRelease && cd ..",
-    "apk": "cd android && gradlew assembleRelease && cd ..",
+    "android_release": "cd android && ./gradlew installRelease && cd ..",
+    "apk": "cd android && ./gradlew assembleRelease && cd ..",
     "ios": "node node_modules/react-native/local-cli/cli.js run-ios"
   },
   "dependencies": {

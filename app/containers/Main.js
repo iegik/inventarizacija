@@ -99,6 +99,7 @@ export default class Main extends Component {
                                         onChangeText={(code) => this.setState({code})}
                                         placeholder="EAN13"
                                         keyboardType={'numeric'}
+                                        selectTextOnFocus={true}
                                     />
                                     <Icon name='camera' onPress={this._onPressButton.bind(this)} />
                                 </Item>
@@ -108,6 +109,7 @@ export default class Main extends Component {
                                         onChangeText={(price) => this.setState({price})}
                                         placeholder="0.00"
                                         keyboardType={'numeric'}
+                                        selectTextOnFocus={true}
                                     />
                                 </Item>
                                 <Item label="Amount">
@@ -116,6 +118,7 @@ export default class Main extends Component {
                                         onChangeText={(amount) => this.setState({amount})}
                                         placeholder="0"
                                         keyboardType={'numeric'}
+                                        selectTextOnFocus={true}
                                     />
                                 </Item>
                                 <View style={styles.buttonGroup}>

@@ -1,0 +1,13 @@
+const INVENTORY_CREATE = 'CREATE';
+const INVENTORY_UPDATE = 'UPDATE';
+const INVENTORY_DELETE = 'DELETE';
+const INVENTORY_FLUSH = 'FLUSH';
+
+const actionTypes = {
+    INVENTORY_CREATE,
+    INVENTORY_UPDATE,
+    INVENTORY_DELETE,
+    INVENTORY_FLUSH,
+};
+
+export default actionTypes;

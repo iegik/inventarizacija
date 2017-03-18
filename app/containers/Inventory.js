@@ -24,8 +24,18 @@ import {
 } from 'react-native';
 import Camera from 'react-native-camera';
 import InventoryList from './InventoryList';
+import InventoryStore from '../stores/InventoryStore';
+import actionTypes from '../stores/actionTypes';
 
-export default class Main extends Component {
+const {
+    INVENTORY_CREATE,
+    INVENTORY_UPDATE,
+    INVENTORY_DELETE,
+    INVENTORY_FLUSH,
+} = actionTypes;
+let inventoryStore = new InventoryStore();
+
+export default class extends Component {
     state = {
         code: '',
         amount: '1',
@@ -34,8 +44,14 @@ export default class Main extends Component {
         showCamera: false,
         renderPlaceholderOnly: true,
         loadingCamera: true,
-        inventory: [],
+        inventory: inventoryStore.reducer(),
     };
+
+    dispatch(action) {
+        this.setState(prevState => ({
+            inventory: inventoryStore.reducer(prevState.inventory, action),
+        }));
+    }
 
     componentDidMount() {
         InteractionManager.runAfterInteractions(() => {
@@ -97,6 +113,7 @@ export default class Main extends Component {
                                     <Input
                                         value={this.state.code}
                                         onChangeText={(code) => this.setState({code})}
+                                        onEndEditing={this.updateInventory.bind(this)}
                                         placeholder="EAN13"
                                         keyboardType={'numeric'}
                                         selectTextOnFocus={true}
@@ -106,7 +123,7 @@ export default class Main extends Component {
                                 <Item label="Price">
                                     <Input
                                         value={this.state.price}
-                                        onChangeText={(price) => this.setState({price})}
+                                        onChangeText={(price) => this.setState({price}, this.updateInventory.bind(this))}
                                         placeholder="0.00"
                                         keyboardType={'numeric'}
                                         selectTextOnFocus={true}
@@ -115,7 +132,7 @@ export default class Main extends Component {
                                 <Item label="Amount">
                                     <Input
                                         value={this.state.amount}
-                                        onChangeText={(amount) => this.setState({amount})}
+                                        onChangeText={(amount) => this.setState({amount}, this.updateInventory.bind(this))}
                                         placeholder="0"
                                         keyboardType={'numeric'}
                                         selectTextOnFocus={true}
@@ -138,7 +155,7 @@ export default class Main extends Component {
                             </Form>
                         </CardItem>
                         <CardItem footer>
-                            <Button title="Submit" full onPress={()=>this.addToInventory()} >
+                            <Button title="Submit" full onPress={()=>this.updateInventory()} >
                                 <Text>{ 'Submit' }</Text>
                             </Button>
                         </CardItem>
@@ -151,17 +168,9 @@ export default class Main extends Component {
         );
     }
 
-    addToInventory() {
-        let {inventory, code, amount, measurement, price} = this.state;
-        let index = inventory.length;
-        inventory.forEach((item, i) => {
-            if(item.code === this.state.code){
-                index = i;
-            }
-        });
-
-        inventory[index] = {code, amount, measurement, price};
-        this.setState({inventory});
+    updateInventory() {
+        let {code, amount, measurement, price} = this.state;
+        this.dispatch({type: INVENTORY_UPDATE, value: {code, amount, measurement, price}});
     }
 
     readBarCode(event) {
@@ -176,7 +185,7 @@ export default class Main extends Component {
     }
 
     setMeasurement(measurement) {
-        this.setState({measurement})
+        this.setState({measurement}, this.updateInventory.bind(this))
     }
 
     _onPressButton(value){

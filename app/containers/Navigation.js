@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Navigator} from 'react-native';
 
 import AppMenu from './Menu';
-import Main from './Main';
+import Main from './Inventory';
 import Theme from './Theme';
 
 export default class extends Component {

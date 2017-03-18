@@ -79,15 +79,15 @@ export default class Main extends Component {
         return (
             <Container>
                 <Header>
-                    <Left>
-                        <Button title="Menu" transparent onPress={this.props.application.menu.bind(this)}>
-                            <Icon name='menu' />
-                        </Button>
-                    </Left>
+                    <Left />
                     <Body>
                         <Title>Inventory</Title>
                     </Body>
-                    <Right />
+                    <Right>
+                        <Button title="Menu" transparent onPress={this.props.application.menu.bind(this)}>
+                            <Icon name='menu' />
+                        </Button>
+                    </Right>
                 </Header>
                 <Content>
                     <Card>

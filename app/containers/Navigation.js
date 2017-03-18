@@ -3,6 +3,7 @@ import {Navigator} from 'react-native';
 
 import AppMenu from './Menu';
 import Main from './Main';
+import Theme from './Theme';
 
 export default class extends Component {
     menu(){
@@ -14,7 +15,11 @@ export default class extends Component {
                 dataArray: [
                     {
                         title: 'Inventory',
-                        name: 'Main'
+                        name: 'Main',
+                    },
+                    {
+                        title: 'Style Guide',
+                        name: 'Theme',
                     }
                 ]
             }
@@ -31,6 +36,8 @@ export default class extends Component {
                                 return <AppMenu {...{application:this, navigator}} {...route.passProps} />;
                             case 'Main':
                                 return <Main {...{application:this, navigator}} {...route.passProps} />;
+                            case 'Theme':
+                                return <Theme {...{application:this, navigator}} {...route.passProps} />;
                         }
                     }
                 }}

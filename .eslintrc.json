@@ -80,7 +80,7 @@
         "line-comment-position": "error",
         "linebreak-style": [
             "error",
-            "linux"
+            "unix"
         ],
         "lines-around-comment": "off",
         "lines-around-directive": "error",

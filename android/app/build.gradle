@@ -84,14 +84,14 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         applicationId "com.inventarizacija"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 3
-        versionName "0.0.2"
+        versionCode 6
+        versionName "0.0.4"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -135,6 +135,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-fs')
     compile project(':react-native-camera')
     compile project(':react-native-vector-icons')
     compile fileTree(dir: "libs", include: ["*.jar"])

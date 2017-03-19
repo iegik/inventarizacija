@@ -266,6 +266,7 @@ export default (variables = variable) => {
       },
 
       '.full': {
+        flex: 1,
         justifyContent: 'center',
         alignSelf: 'stretch',
         borderRadius: 0

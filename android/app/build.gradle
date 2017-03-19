@@ -90,7 +90,7 @@ android {
         applicationId "com.inventarizacija"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 5
+        versionCode 6
         versionName "0.0.4"
         ndk {
             abiFilters "armeabi-v7a", "x86"

@@ -20,7 +20,7 @@ npm run android_release or ios
 2. Enter price and amount
 3. Choose measurement
 
-![](docs/empty.png | width=50) ![](docs/full.png | width=50)
+<img src="docs/empty.png" height="480" /> <img src="docs/full.png" height="480" />
 
 After editing, You can synhronize all of Your data with **inventory.csv** file.
 
